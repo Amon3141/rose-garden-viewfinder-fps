@@ -18,7 +18,7 @@ public class PlanterPopup : MonoBehaviour, IRayEventReceiver, PopupEvent
 
     private Vector3 targetPosition;
     private Quaternion targetRotation;
-    private bool isActive = true;
+    private bool isActive = false;
     private float moveSpeed = 2.0f;
 
     void Start()
@@ -40,17 +40,34 @@ public class PlanterPopup : MonoBehaviour, IRayEventReceiver, PopupEvent
         child.transform.rotation = Quaternion.Lerp(child.transform.rotation, targetRotation, moveSpeed * Time.deltaTime);
     }
 
-    public void OnRaycastExit() { }
+    public void Activate()
+    {
+        OpenPopup();
+        isActive = true;
+    }
+
+    public void DeActivate()
+    {
+        ClosePopup();
+        isActive = false;
+    }
 
     public void OpenPopup() {
         targetPosition = focusPoint.transform.position;
         targetRotation = focusPoint.transform.rotation;
         GameManager.Instance.setCurrentRayAction(this);
-        Invoke("ActivateChildController", 2f); // triggers function after 1 second. stops notes animation from triggering immediately.
+        Invoke("ActivateChildController", 1.5f); // triggers function after 1 second. stops notes animation from triggering immediately.
+    }
+
+    public void ClosePopup() {
+        targetPosition = initialPosition;
+        targetRotation = initialRotation;
+        DisableChildController();
     }
 
     private void ActivateChildController()
     {
+        if (!isActive) return;
         if (!childController) return;
         childController.setIsActive(true);
     }
@@ -60,33 +77,12 @@ public class PlanterPopup : MonoBehaviour, IRayEventReceiver, PopupEvent
         childController.setIsActive(false);
     }
 
-    public void ClosePopup() {
-        targetPosition = initialPosition;
-        targetRotation = initialRotation;
-        //childController.setIsActive(false);
-        DisableChildController();
-    }
-
-    public void OnRaycastEnter()
-    {
-
-    }
-
-    public void Activate()
-    {
-        if (GameManager.Instance.isFocused()) return;
-        OpenPopup();
-        isActive = false;
-    }
-
-    public void DeActivate()
-    {
-        ClosePopup();
-        isActive = true;
-    }
-
     public bool CanReceiveRays()
     {
-        return isActive;
+        return !GameManager.Instance.isFocused() && !isActive;
     }
+
+    public void OnRaycastEnter() {}
+
+    public void OnRaycastExit() {}
 }
