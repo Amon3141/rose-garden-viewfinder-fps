@@ -1,6 +1,7 @@
 // Example implementation of IEventReceiver
 using TMPro;
 using UnityEngine;
+using System.Collections;
 
 public class PlanterPopup : MonoBehaviour, IRayEventReceiver, PopupEvent
 {
@@ -19,7 +20,7 @@ public class PlanterPopup : MonoBehaviour, IRayEventReceiver, PopupEvent
     private Vector3 targetPosition;
     private Quaternion targetRotation;
     private bool isActive = false;
-    private float moveSpeed = 2.0f;
+    private float moveSpeed = 1.5f;
 
     void Start()
     {
@@ -36,12 +37,14 @@ public class PlanterPopup : MonoBehaviour, IRayEventReceiver, PopupEvent
 
     void Update()
     {
-        child.transform.position = Vector3.Lerp(child.transform.position, targetPosition, moveSpeed * Time.deltaTime);
-        child.transform.rotation = Quaternion.Lerp(child.transform.rotation, targetRotation, moveSpeed * Time.deltaTime);
+        float t = moveSpeed * Time.deltaTime;
+        child.transform.position = Vector3.Lerp(child.transform.position, targetPosition, t);
+        child.transform.rotation = Quaternion.Lerp(child.transform.rotation, targetRotation, t);
     }
 
     public void Activate()
     {
+        if (isActive) return;
         OpenPopup();
         isActive = true;
     }
@@ -60,9 +63,15 @@ public class PlanterPopup : MonoBehaviour, IRayEventReceiver, PopupEvent
     }
 
     public void ClosePopup() {
+        DisableChildController();
+        StartCoroutine(ClosePopupCoroutine());
+    }
+
+    IEnumerator ClosePopupCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
         targetPosition = initialPosition;
         targetRotation = initialRotation;
-        DisableChildController();
     }
 
     private void ActivateChildController()

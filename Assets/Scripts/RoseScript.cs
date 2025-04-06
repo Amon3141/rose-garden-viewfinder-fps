@@ -6,8 +6,7 @@ public class RoseScript : MonoBehaviour, IRayEventReceiver
     private bool isActive = false;
     private Animator animator;
 
-    void Start()
-    {
+    void Awake() {
         animator = GetComponent<Animator>();
     }
 
@@ -29,9 +28,13 @@ public class RoseScript : MonoBehaviour, IRayEventReceiver
     {
         this.isActive = isActive;
         if (isActive && animator != null)
+        {
             animator.SetTrigger("OpenRoseTrigger");
+        }
         else if (!isActive && animator != null)
+        {
             animator.SetTrigger("CloseRoseTrigger");
+        }
     }
 
     public bool CanReceiveRays()
