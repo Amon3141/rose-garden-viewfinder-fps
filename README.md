@@ -3,6 +3,13 @@
 ## Project Overview
 This is a First-Person Shooter (FPS) version of the UBC Rose Garden XR ViewFinder Project.
 
+## Development Environment
+| Component | Specification |
+|-----------|---------------|
+| Unity     | 6000.0.36f1 LTS |
+| Computer  | MacBook Pro (2020), Apple M1 chip, 16GB |
+| OS        | macOS Sequoia 15.4 |
+
 ## Project Structure
 Below are the locations of important assets:
 
