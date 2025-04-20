@@ -1,5 +1,7 @@
 # UBC Rose Garden XR Viewfinder Project (FPS Version)
 
+![RoseGardenUnityImage](docs/doc-image.png)
+
 ## Project Overview
 This is a First-Person Shooter (FPS) version of the UBC Rose Garden XR ViewFinder Project.
 
